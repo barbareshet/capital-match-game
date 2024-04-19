@@ -9,9 +9,10 @@ interface Props {
 
 interface Match {
     country: string;
-    capital: string;
+    city: string; // Add the city property here
     continent: string;
 }
+
 
 const shuffleArray = (matchingData: Match[]) => {
     return matchingData.slice().sort(() => Math.random() - 0.5);
