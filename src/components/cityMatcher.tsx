@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from "next/link";
 
+
 interface Match {
     country: string;
     city: string;
@@ -22,9 +23,9 @@ function CityMatcher(props: Props) {
     const [countriesData, setCountriesData] = useState<Match[]>(countriesArr);
     const [pairedData, setPairedData] = useState<Match[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
-    const [countriesCount, setCountriesCount] = useState<number>(10);
-    const randomizedArr = shuffleArray(shuffledData);
-    console.log(randomizedArr.slice(0, countriesCount));
+    const [countriesCount, setCountriesCount] = useState<number>(parseInt(countriesArr.length));
+    const randomizedArr = shuffleArray(countriesData);
+
     useEffect(() => {
         if (continentName === 'Global') {
             // If continentName is 'All', display all countries
@@ -32,7 +33,9 @@ function CityMatcher(props: Props) {
             setShuffledData(shuffleArray(randomizedArr));
         } else {
             // Otherwise, filter countries by the selected continent
-            const countriesByContinent = props.countriesArr.filter((country: Match) => country.continent.toLowerCase() === continentName.toLowerCase());
+            const countriesByContinent = props.countriesArr.filter((country: Match) => (
+                country.continent.toLowerCase() === continentName.toLowerCase()
+            ));
             setCountriesData(countriesByContinent);
             setShuffledData(shuffleArray(countriesByContinent));
         }
@@ -40,7 +43,7 @@ function CityMatcher(props: Props) {
 
 
     useEffect(() => {
-        const limitedCountriesData = props.countriesArr.slice(0, countriesCount);
+        const limitedCountriesData = randomizedArr.slice(0, countriesCount);
         setCountriesData((prevCountriesData) => {
             // Ensure that the previous state is used to avoid an infinite loop
             if (prevCountriesData.length !== limitedCountriesData.length) {
@@ -51,13 +54,11 @@ function CityMatcher(props: Props) {
         setShuffledData(shuffleArray(limitedCountriesData));
     }, [countriesCount, props.countriesArr]);
 
+    // console.log(countriesArr.length)
+    const handleCountryButtonClick = () => {
 
-    const handleAllButtonClick = () => {
-        // Set continentName to 'All' to display all countries
-        setCountriesCount(-1);
-
-    };
-
+    }
+    // console.log(countriesCount)
     const handleCapitalClick = (match: Match) => {
         if (match === selectedMatch) {
             const newPairedMatch = [...pairedData, match];
@@ -82,10 +83,11 @@ function CityMatcher(props: Props) {
 
     // setting WIN status, when completing all matches
     const win = pairedData.length === countriesData.length;
-
+    // console.log(continentName.toLowerCase().replace(/\s/g, '-'))
     return (
         <div>
-            <h1 className="text-center text-2xl my-3 font-black">Capital Match Game in - {continentName}</h1>
+            <h1 className="text-center text-2xl my-3 font-bold">Capital Match Game in - {continentName}</h1>
+            <h3 className="text-center">You Found {pairedData.length} out of {countriesData.length}</h3>
             {
                 win && (
                     <div className="bg-green-300 text-green-950 font-bold text-center py-2 px-4 rounded transition duration-300">
@@ -95,13 +97,17 @@ function CityMatcher(props: Props) {
             }
             <div className="flex gap-2 justify-center my-4">
                 <Link href="/" className="bg-indigo-300 rounded px-4 py-2 hover:bg-indigo-700 hover:text-white transition ease-in duration-150">All</Link>
-                {uniqueContinents.map((continent, index) => (
-                    <Link href={`continent/${continent.toLowerCase()}`} key={index} className="bg-indigo-300 rounded px-4 py-2 hover:bg-indigo-700 hover:text-white transition ease-in duration-150">{continent}</Link>
-                ))}
+                {
+                    "Global" === continentName && (
+                        uniqueContinents.map((continent, index) => (
+                            <Link href={`/continent/${continent.toLowerCase().replace(/\s/g, '-')}`} key={index} className="bg-indigo-300 rounded px-4 py-2 hover:bg-indigo-700 hover:text-white transition ease-in duration-150">{continent}</Link>
+                        ))
+                    )
+                }
             </div>
             <div className="flex gap-2 justify-center my-4">
                 <div>Select How many countries to see:</div>
-                <button value="*" onClick={handleAllButtonClick}>All</button>
+                <button value="*" onClick={() => setCountriesCount(countriesArr.length)}>All</button>
                 <button value={5} onClick={() => setCountriesCount(5)}>5</button>
                 <button value={10} onClick={() => setCountriesCount(10)}>10</button>
                 <button value={15} onClick={() => setCountriesCount(15)}>15</button>
