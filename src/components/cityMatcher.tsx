@@ -25,13 +25,16 @@ function CityMatcher(props: Props) {
     const [countriesData, setCountriesData] = useState<Match[]>(countriesArr);
     const [pairedData, setPairedData] = useState<Match[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
-    const [filter, setFilter] = useState('');
     const [length, setLength] = useState<number>(10); // Adjusted initial state type
 
 
     useEffect(() => {
         setShuffledData(shuffleArray(countriesArr));
-    }, [length]);
+        // Filter countries by the selected continent
+        const countriesByContinent = countriesArr.filter((country: Match) => country.continent.toLowerCase() === continentName.toLowerCase());
+        setCountriesData(countriesByContinent);
+    }, [continentName, countriesArr]); // Add continentName and countriesArr to the dependency array
+
 
     const handleCapitalClick = (match: Match) => {
         if (match === selectedMatch) {
