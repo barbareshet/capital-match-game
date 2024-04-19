@@ -23,12 +23,13 @@ function CityMatcher(props: Props) {
     const [pairedData, setPairedData] = useState<Match[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
     const [countriesCount, setCountriesCount] = useState<number>(10);
-
+    const randomizedArr = shuffleArray(countriesData);
+    // console.log(randomizedArr.slice(0, countriesCount));
     useEffect(() => {
         if (continentName === 'Global') {
             // If continentName is 'All', display all countries
-            setCountriesData(props.countriesArr);
-            setShuffledData(shuffleArray(props.countriesArr));
+            setCountriesData(randomizedArr);
+            setShuffledData(shuffleArray(randomizedArr));
         } else {
             // Otherwise, filter countries by the selected continent
             const countriesByContinent = props.countriesArr.filter((country: Match) => country.continent.toLowerCase() === continentName.toLowerCase());
