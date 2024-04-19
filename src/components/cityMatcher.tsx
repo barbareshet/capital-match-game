@@ -39,12 +39,13 @@ function CityMatcher(props: Props) {
         setSelectedMatch(null);
     };
 
-    const uniqueContinents = countriesArr.reduce((acc, country) => {
+    const uniqueContinents = countriesArr.reduce((acc: string[], country) => {
         if (!acc.includes(country.continent)) {
             acc.push(country.continent);
         }
         return acc;
     }, []);
+
 
     const handleResetClick = () => {
         setPairedData([]);
