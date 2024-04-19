@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import CityMatcher from "@/components/cityMatcher";
-import {data} from "@/db/shortData";
+import {data} from "@/db/data";
 
 import { useRouter } from 'next/router';
 
