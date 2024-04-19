@@ -24,7 +24,8 @@ function CityMatcher(props: Props) {
     const [pairedData, setPairedData] = useState<Match[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
     const [filter, setFilter] = useState('');
-    const [length, setLength] = useState<Match[]>(10);
+    const [length, setLength] = useState<number>(10); // Adjusted initial state type
+
 
     useEffect(() => {
         setShuffledData(shuffleArray(countriesArr));
@@ -67,24 +68,24 @@ function CityMatcher(props: Props) {
                 ))}
             </div>
             <div className="flex gap-5 justify-center">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-row flex-wrap justify-between gap-2">
                     {countriesData.map((match, index) => (
                         <button key={index}
                                 className={`rounded px-4 py-2 text-white font-bold
                             hover:bg-gray-700 hover:scale-105 transition ease-in duration-300
-                            ${isMatch(match) ? "bg-green-700" : "bg-gray-500"}
+                            ${isMatch(match) ? "bg-green-700" : "bg-indigo-300"}
                             ${selectedMatch === match && "bg-gray-900"}`}
                                 onClick={() => setSelectedMatch(match)}>
                             {match.country}
                         </button>
                     ))}
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-row flex-wrap justify-between gap-2">
                     {shuffledData.map((match, index) => (
                         <button key={index}
                                 className={`rounded px-4 py-2 text-white font-bold
                             ${selectedMatch !== null ? "hover:bg-gray-700 hover:scale-105 transition ease-in duration-300" : "cursor-not-allowed"}
-                            ${isMatch(match) ? "bg-green-700" : "bg-gray-500"}`}
+                            ${isMatch(match) ? "bg-green-700" : "bg-blue-300"}`}
                                 onClick={() => handleCapitalClick(match)}
                                 disabled={selectedMatch === null}>
                             {match.city}
