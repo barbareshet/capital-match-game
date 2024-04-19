@@ -2,14 +2,14 @@
 import React, {useEffect, useState} from 'react';
 import {data} from "@/db/data";
 import commander from "commander";
-
+import Link from "next/link";
 interface Match {
     country: string,
     capital: string,
     continent: string
 }
 
-const preMatchedData = data
+
 
 const shuffleArray = (matchingData: Match[]) => {
     return matchingData.slice().sort(() => Math.random() - 0.5);
@@ -18,18 +18,18 @@ const shuffleArray = (matchingData: Match[]) => {
 
 
 
-function CityMatcher() {
-
-    const [shuffledData, setShuffledData] = useState<Match[]>(preMatchedData);
-    const [countriesData, setCountriesData] = useState<Match[]>(preMatchedData);
+function CityMatcher(props) {
+    const {countriesArr, continentName} = props
+    const [shuffledData, setShuffledData] = useState<Match[]>(countriesArr);
+    const [countriesData, setCountriesData] = useState<Match[]>(countriesArr);
     const [pairedData, setPairedData] = useState<Match[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
     const [filter, setFilter] = useState('');
     const [length, setLength] = useState<Match[]>(10)
 
     useEffect(() => {
-        setShuffledData(shuffleArray(preMatchedData));
-        // setCountriesData(preMatchedData.slice(0,length))
+        setShuffledData(shuffleArray(countriesArr));
+        // setCountriesData(countriesArr.slice(0,length))
     }, [length]);
 
     const handleCapitalClick = (match: Match) => {
@@ -41,7 +41,7 @@ function CityMatcher() {
         setSelectedMatch(null)
     }
     // Use reduce to collect unique continents into an array
-    const uniqueContinents = preMatchedData.reduce((acc, country) => {
+    const uniqueContinents = countriesArr.reduce((acc, country) => {
         // Add the continent to the accumulator array if it doesn't exist
         if (!acc.includes(country.continent)) {
             acc.push(country.continent);
@@ -52,32 +52,18 @@ function CityMatcher() {
     const handleResetClick = () => {
         setPairedData([]);
     }
-    const handleContinentClick = (e) => {
-
-        const selectedContinent = e.target.value;
-        if ('*' == selectedContinent){
-            setFilter('');
-        } else {
-            setFilter(selectedContinent);
-        }
-        console.log(filter)
-        const continentData = shuffledData.filter( cont => cont.continent === filter)
-        setShuffledData(continentData);
-        setCountriesData(continentData);
-
-    }
     const handleGameLength = (e) => {
         const gameLength = parseInt(e.target.value);
         setLength(gameLength);
     };
-
+    console.log(props)
     // setting WIN status, when completing all matches
-    const win = pairedData.length === preMatchedData.length;
+    const win = pairedData.length === countriesArr.length;
     //setting correct match for buttons
     const isMatch = (match: Match) => pairedData.some((pairedMatch) => pairedMatch === match)
     return (
         <div>
-            <h1 className="text-center text-2xl my-3 font-black">Capital Match Game</h1>
+            <h1 className="text-center text-2xl my-3 font-black">Capital Match Game in - {continentName}</h1>
             {
                 win && (
                     <div className="bg-green-300 text-green-950 font-bold text-center py-2 px-4 rounded transition duration-300">
@@ -85,25 +71,25 @@ function CityMatcher() {
                     </div>
                 )
             }
-            {/*<div className="flex gap-2 justify-center my-4">*/}
-            {/*    <button*/}
-            {/*        className="bg-indigo-300 rounded px-4 py-2 hover:bg-indigo-700*/}
-            {/*                hover:text-white transition ease-in duration-150"*/}
-            {/*        value="*"*/}
-            {/*        onClick={(e) => handleContinentClick(e)}*/}
-            {/*    >All</button>*/}
-            {/*    {*/}
-            {/*        uniqueContinents.map( (continent, index) => (*/}
-            {/*            <button*/}
-            {/*                key={index}*/}
-            {/*                className="bg-indigo-300 rounded px-4 py-2 hover:bg-indigo-700*/}
-            {/*                hover:text-white transition ease-in duration-150"*/}
-            {/*                value={continent}*/}
-            {/*                onClick={(e) => handleContinentClick(e)}*/}
-            {/*            >{continent}</button>*/}
-            {/*        ))*/}
-            {/*    }*/}
-            {/*</div>*/}
+            <div className="flex gap-2 justify-center my-4">
+                <Link href="/"
+                      className="bg-indigo-300 rounded px-4 py-2 hover:bg-indigo-700
+                            hover:text-white transition ease-in duration-150"
+                >
+                    All
+                </Link>
+                {
+                    uniqueContinents.map( (continent, index) => (
+                        <Link href={`continent/${continent.toLowerCase()}`}
+                            key={index}
+                            className="bg-indigo-300 rounded px-4 py-2 hover:bg-indigo-700
+                            hover:text-white transition ease-in duration-150"
+                        >{continent}
+                        </Link>
+                    ))
+                }
+
+            </div>
             {/*<div className="flex gap-2 justify-center my-4">*/}
             {/*    <span>How many countries?</span>*/}
             {/*    <button*/}
