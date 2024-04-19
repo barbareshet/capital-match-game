@@ -7,7 +7,7 @@ import {Inter} from "next/font/google";
 const inter = Inter({ subsets: ["latin"] })
 interface Match {
     country: string;
-    capital: string;
+    city: string;
     continent: string;
 }
 const preMatchedData = data
