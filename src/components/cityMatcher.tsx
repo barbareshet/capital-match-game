@@ -23,7 +23,7 @@ function CityMatcher(props: Props) {
     const [countriesData, setCountriesData] = useState<Match[]>(countriesArr);
     const [pairedData, setPairedData] = useState<Match[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
-    const [countriesCount, setCountriesCount] = useState<number>(parseInt(countriesArr.length));
+    const [countriesCount, setCountriesCount] = useState<number>(countriesArr.length);
     const randomizedArr = shuffleArray(countriesData);
 
     useEffect(() => {
