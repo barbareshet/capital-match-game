@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { data } from "@/db/data";
-import Link from "next/link";
 
-interface Props {
-    countriesArr: Match[];
-    continentName: string;
-}
+import Link from "next/link";
 
 interface Match {
     country: string;
     city: string; // Add the city property here
     continent: string;
 }
+
+interface Props {
+    countriesArr: Match[]; // Adjust the type according to your data structure
+    continentName: string; // Assuming continentName is a string
+}
+
 
 
 const shuffleArray = (matchingData: Match[]) => {
@@ -40,12 +41,14 @@ function CityMatcher(props: Props) {
         setSelectedMatch(null);
     };
 
+
     const uniqueContinents = countriesArr.reduce((acc: string[], country) => {
         if (!acc.includes(country.continent)) {
             acc.push(country.continent);
         }
         return acc;
     }, []);
+
 
 
     const handleResetClick = () => {
@@ -84,14 +87,17 @@ function CityMatcher(props: Props) {
                 </div>
                 <div className="flex flex-row flex-wrap justify-between gap-2">
                     {shuffledData.map((match, index) => (
-                        <button key={index}
-                                className={`rounded px-4 py-2 text-white font-bold
+                        <button
+                            key={index}
+                            className={`rounded px-4 py-2 text-white font-bold
                             ${selectedMatch !== null ? "hover:bg-gray-700 hover:scale-105 transition ease-in duration-300" : "cursor-not-allowed"}
                             ${isMatch(match) ? "bg-green-700" : "bg-blue-300"}`}
-                                onClick={() => handleCapitalClick(match)}
-                                disabled={selectedMatch === null}>
+                            onClick={() => handleCapitalClick(match)}
+                            disabled={selectedMatch === null}
+                        >
                             {match.city}
                         </button>
+
                     ))}
                 </div>
             </div>
